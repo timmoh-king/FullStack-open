@@ -1,65 +1,59 @@
-import React from "react"
-import Header from "./components/Header"
-import Content from "./components/Content"
-import Total from "./components/Total"
+import React from 'react'
+import { useState } from 'react'
+import Button from './components/Button'
+import History from './components/History'
 
 const App = () => {
-  const course = 'Half Stack application development'
-  const parts = [
-    {
-      name: 'Fundamentals of React',
-      exercises: 10
-    },
-    {
-      name: 'Using props to pass data',
-      exercises: 7
-    },
-    {
-      name: 'State of a component',
-      exercises: 14
-    }
-  ]
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
+  const [all, setAll] = useState(0)
+  const [average, setAverage] = useState(0)
+  const [positive, setPositive] = useState(0)
 
-  const arto = {
-    name: 'Arto Hellas',
-    age: 35,
-    education: 'PhD',
-    greet: function() {
-      console.log('hello, my name is ' + this.name + 'I am ' + this.age + ' years')
-    },
+  const handleGood = () => {
+    const updatedGood = (good + 1)
+    setGood(updatedGood)
+    const updatedAllGood = updatedGood + neutral + bad
+    setAll(updatedAllGood)
+    setAverage(updatedAllGood / 3)
+    setPositive(updatedAllGood * 100)
   }
-  arto.growOlder = function() {
-    this.age += 1
-  }
-  arto.greet()
-  arto.growOlder()
-  arto.greet()
 
-  class Person {
-    constructor(name, age) {
-      this.name = name
-      this.age = age
-    }
-    greet() {
-      console.log('hello, my name is ' + this.name)
-    }
+  const handleNeutral = () => {
+    const updatedNeutral = (neutral + 1)
+    setNeutral(updatedNeutral)
+    const updatedAllNeutral = updatedNeutral + good + bad
+    setAll(updatedAllNeutral)
+    setAverage(updatedAllNeutral / 3)
+    setPositive(updatedAllNeutral * 100)
+  }
+
+  const handleBad = () => {
+    const updatedBad = (bad + 1)
+    setBad(updatedBad)
+    const updatedAllBad = updatedBad + good + neutral
+    setAll(updatedAllBad)
+    setAverage(updatedAllBad / 3)
+    setPositive(updatedAllBad * 100)
   }
   
-  const adam = new Person('Adam Ondra', 29)
-  adam.greet()
-  
-  const janja = new Person('Janja Garnbret', 23)
-  janja.greet()
-
+  console.log(average)
   return (
     <div>
-      <Header course={course} />
-      <Content part={parts[0].name} exercise={parts[0].exercises} />
-      <Content part={parts[1].name} exercise={parts[1].exercises} />
-      <Content part={parts[2].name} exercise={parts[2].exercises} />
-      <Total exercise1={parts[0].exercises} exercise2={parts[1].exercises} exercise3={parts[2].exercises} />
+      <h1>give feedback</h1>
+      <div className='inline-flex'>
+        <Button onClick={handleGood} buttonText='good' />
+        <Button onClick={handleNeutral} buttonText='neutral' />
+        <Button onClick={handleBad} buttonText='bad' />
+      </div>
+      <h1>Statistics</h1>
+      <div>
+        <History good={good} neutral={neutral} bad={bad} all={all} average={average} positive={positive}/>
+      </div>
     </div>
   )
 }
 
 export default App
+
