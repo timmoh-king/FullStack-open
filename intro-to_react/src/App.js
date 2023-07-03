@@ -1,59 +1,46 @@
-import React from 'react'
-import { useState } from 'react'
-import Button from './components/Button'
-import History from './components/History'
+import React from "react";
+import { useState } from "react";
 
-const App = () => {
-  const [good, setGood] = useState(0)
-  const [neutral, setNeutral] = useState(0)
-  const [bad, setBad] = useState(0)
-  const [all, setAll] = useState(0)
-  const [average, setAverage] = useState(0)
-  const [positive, setPositive] = useState(0)
+const App = ({notes}) => {
+  const [notes, setNotes] = useState(notes);
+  const [newNote, setNewNote] = useState('')
+  const [showAll, setShowAll] = useState(true)
 
-  const handleGood = () => {
-    const updatedGood = (good + 1)
-    setGood(updatedGood)
-    const updatedAllGood = updatedGood + neutral + bad
-    setAll(updatedAllGood)
-    setAverage(updatedAllGood / 3)
-    setPositive(updatedAllGood * 100)
-  }
+  const addNote = (e) => {
+    e.preventDefault()
+    const noteObject = {
+      content: newNote,
+      important: Math.random() < 0.5,
+      id: notes.length + 1
+    }
+    setNotes(notes.concat(noteObject))
+    setNewNote('')
+  };
 
-  const handleNeutral = () => {
-    const updatedNeutral = (neutral + 1)
-    setNeutral(updatedNeutral)
-    const updatedAllNeutral = updatedNeutral + good + bad
-    setAll(updatedAllNeutral)
-    setAverage(updatedAllNeutral / 3)
-    setPositive(updatedAllNeutral * 100)
-  }
+  const notesToShow = showAll ? notes : notes.filter(note => note.important === true)
 
-  const handleBad = () => {
-    const updatedBad = (bad + 1)
-    setBad(updatedBad)
-    const updatedAllBad = updatedBad + good + neutral
-    setAll(updatedAllBad)
-    setAverage(updatedAllBad / 3)
-    setPositive(updatedAllBad * 100)
-  }
-  
-  console.log(average)
+  const handleNoteChange = (e) => {
+    setNewNote(e.target.value)
+  };
+
   return (
     <div>
-      <h1>give feedback</h1>
-      <div className='inline-flex'>
-        <Button onClick={handleGood} buttonText='good' />
-        <Button onClick={handleNeutral} buttonText='neutral' />
-        <Button onClick={handleBad} buttonText='bad' />
-      </div>
-      <h1>Statistics</h1>
-      <div>
-        <History good={good} neutral={neutral} bad={bad} all={all} average={average} positive={positive}/>
-      </div>
+      <h1>Notes</h1>
+      <ul>
+        {notes.map((note) => (
+          <li key={note.id}>{note}</li>
+        ))}
+      </ul>
+      <form onSubmit={addNote}>
+        <input 
+          value={newNote}
+          onChange={handleNoteChange}
+        />
+        <button type="submit">save</button>
+      </form>
+      <button onClick={notesToShow}>Show</button>
     </div>
-  )
-}
+  );
+};
 
-export default App
-
+export default App;
