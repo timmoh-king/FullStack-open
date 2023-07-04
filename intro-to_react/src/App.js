@@ -1,44 +1,79 @@
 import React from "react";
 import { useState } from "react";
 
-const App = ({notes}) => {
-  const [notes, setNotes] = useState(notes);
-  const [newNote, setNewNote] = useState('')
-  const [showAll, setShowAll] = useState(true)
+const App = (props) => {
+  const [persons, setPersons] = useState(props.persons);
+  const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState(0);
+  const [showNumbers, setShowNumbers] = useState(false);
 
-  const addNote = (e) => {
-    e.preventDefault()
-    const noteObject = {
-      content: newNote,
-      important: Math.random() < 0.5,
-      id: notes.length + 1
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const newPerson = {
+      id: persons.length + 1,
+      name: newName,
+      number: newNumber,
+    };
+    for (let i = 0; i < persons.length; i++) {
+      if (persons[i].name === newPerson.name) {
+        alert(`${newPerson.name} is already added in the phonebook`);
+        return;
+      }
     }
-    setNotes(notes.concat(noteObject))
-    setNewNote('')
+    if (newPerson.name === "" && newPerson.number === "") {
+      alert("Please enter name");
+      return;
+    } else {
+      setPersons(persons.concat(newPerson));
+      setNewName("");
+      setNewNumber("");
+    }
   };
 
-  const notesToShow = showAll ? notes : notes.filter(note => note.important === true)
-
-  const handleNoteChange = (e) => {
-    setNewNote(e.target.value)
+  const handleInput = (e) => {
+    setNewName(e.target.value);
   };
+
+  const handleNumInput = (e) => {
+    setNewNumber(e.target.value);
+  };
+
+  const showNums = showNumbers ? (
+    <ul>
+      {persons.map((person) => (
+        <li key={person.id}>
+          {person.name} {person.number}
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <ul>
+      {persons.map((person) => (
+        <li key={person.id}>{person.number}</li>
+      ))}
+    </ul>
+  );
 
   return (
     <div>
-      <h1>Notes</h1>
-      <ul>
-        {notes.map((note) => (
-          <li key={note.id}>{note}</li>
-        ))}
-      </ul>
-      <form onSubmit={addNote}>
-        <input 
-          value={newNote}
-          onChange={handleNoteChange}
-        />
-        <button type="submit">save</button>
+      <h2>Phonebook</h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          funame: <input onChange={handleInput} placeholder="enter your name" />
+        </div>
+        <div>
+          number:{" "}
+          <input onChange={handleNumInput} placeholder="enter your number" />
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
       </form>
-      <button onClick={notesToShow}>Show</button>
+      <h2>Numbers</h2>
+      <button onClick={() => setShowNumbers(!showNumbers)}>
+        show {showNumbers ? "numbers" : "names"}
+      </button>
+      {showNums}
     </div>
   );
 };
