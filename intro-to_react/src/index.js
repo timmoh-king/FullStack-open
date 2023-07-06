@@ -1,23 +1,15 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
 
-const persons = [
-  {
-    id: 1,
-    name: "Arto Hellas",
-    number: '0731234567'
-  },
-  {
-    id: 2,
-    name: "Alphonce Once",
-    number: '0701234587'
-  }
-]
+// axios.get('http://localhost:3001/notes').then(response => {
+//   const notes = response.data
+//   ReactDOM.createRoot(document.getElementById('root')).render(<App notes={notes} />)
+// })
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App persons={persons} />
+    <App />
   </React.StrictMode>
 );
